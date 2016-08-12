@@ -16,6 +16,10 @@ public class QuoteProvider {
 
   static final Uri BASE_CONTENT_URI = Uri.parse("content://" + AUTHORITY);
 
+  private QuoteProvider(){
+
+  }
+
   interface Path{
     String ID_BUSINESS_NAME = "biz";
   }
