@@ -3,4 +3,5 @@
     <string name="title_activity_maps">Map</string>
     <string name="sync_account_type">mem.edu.joshua</string>
     <string name="content_authority">mem.edu.joshua.data.QuoteProvider</string>
+    <string name="title_activity_yelp_map">Map</string>
 </resources>

@@ -1,107 +1,40 @@
 package mem.edu.joshua.sync;
 
-import android.Manifest;
+
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.content.AbstractThreadedSyncAdapter;
 import android.content.ContentProviderClient;
 import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.OperationApplicationException;
 import android.content.SyncRequest;
 import android.content.SyncResult;
-import android.content.pm.PackageManager;
-import android.location.Location;
-import android.net.ParseException;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.RemoteException;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.content.ContextCompat;
-import android.text.format.Time;
 import android.util.Log;
-import android.view.View;
-
-//import com.beust.jcommander.Parameter;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.location.LocationServices;
-import com.google.ads.mediation.MediationServerParameters;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.yelp.clientlib.connection.YelpAPI;
-import com.yelp.clientlib.connection.YelpAPIFactory;
-import com.yelp.clientlib.entities.Business;
-import com.yelp.clientlib.entities.SearchResponse;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import org.scribe.builder.ServiceBuilder;
-import org.scribe.builder.api.DefaultApi10a;
-import org.scribe.model.OAuthRequest;
-import org.scribe.model.Response;
-import org.scribe.model.Token;
-import org.scribe.model.Verb;
-import org.scribe.oauth.OAuthService;
-
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Vector;
-
 import mem.edu.joshua.BuildConfig;
 import mem.edu.joshua.R;
-import mem.edu.joshua.TwoStepOAuth;
 import mem.edu.joshua.Yelp;
 import mem.edu.joshua.data.QuoteColumns;
 import mem.edu.joshua.data.QuoteProvider;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.http.GET;
-import retrofit2.http.Path;
 
 /**
  * Created by erikllerena on 8/4/16.
  */
 public class SyncAdapter extends AbstractThreadedSyncAdapter{
     public final String LOG_TAG = SyncAdapter.class.getSimpleName();
-    public static final int SYNC_INTERVAL = 4;//60 * 180;
+    public static final int SYNC_INTERVAL = 400;//60 * 180;
     public static final int SYNC_FLEXTIME = SYNC_INTERVAL/3;
-    private static final long DAY_IN_MILLIS = 1000;//1000 * 60 * 60 * 24;
+    private static final long DAY_IN_MILLIS = 11000;//1000 * 60 * 60 * 24;
     private static final int WEATHER_NOTIFICATION_ID = 3004;
 
-
-//
-//    private static final String API_HOST = "api.yelp.com";
-//    private static final String DEFAULT_TERM = "dinner";
-//    private static final String DEFAULT_LOCATION = "San Francisco, CA";
-//    private static final int SEARCH_LIMIT = 3;
-//    private static final String SEARCH_PATH = "/v2/search";
-//    private static final String BUSINESS_PATH = "/v2/business";
-
-
-//
-//    private GoogleApiClient mGoogleApiClient;
-//    private YelpAPI yelpAPI;
-//    private Location mLastLocation;
-////    private Yelp yelp;
-//YelpAPI yelpApi;
-//   // YelpAPICLI yelpApiCli;
-//
-//    OAuthService service;
-//    Token accessToken;
 
     String consumerKey = BuildConfig.YELP_CONSUMER_KEY;
     String consumerSecret = BuildConfig.YELP_CONSUMER_SECRET;
@@ -111,81 +44,14 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter{
     public SyncAdapter(Context context, boolean autoInitialize) {
         super(context, autoInitialize);
 
-//        YelpAPIFactory apiFactory = new YelpAPIFactory(BuildConfig.YELP_CONSUMER_KEY, BuildConfig.YELP_CONSUMER_SECRET, BuildConfig.YELP_TOKEN, BuildConfig.YELP_TOKEN_SECRET);
-//        YelpAPI yelpAPI = apiFactory.createAPI();
-//
-//        this.service =
-//                new ServiceBuilder().provider(TwoStepOAuth.class).apiKey(BuildConfig.YELP_CONSUMER_KEY)
-//                        .apiSecret(BuildConfig.YELP_CONSUMER_SECRET).build();
-//        this.accessToken = new Token(BuildConfig.YELP_TOKEN, BuildConfig.YELP_TOKEN_SECRET);
-
     }
-
-
-
-//    public class TwoStepOAuth extends DefaultApi10a {
-//
-//        @Override
-//        public String getAccessTokenEndpoint() {
-//            return null;
-//        }
-//
-//        @Override
-//        public String getAuthorizationUrl(Token arg0) {
-//            return null;
-//        }
-//
-//        @Override
-//        public String getRequestTokenEndpoint() {
-//            return null;
-//        }
-//    }
-//
-//
-//    public String searchForBusinessesByLocation(String term, String location) {
-//        OAuthRequest request = createOAuthRequest(SEARCH_PATH);
-//        request.addQuerystringParameter("term", term);
-//        request.addQuerystringParameter("location", location);
-//        request.addQuerystringParameter("limit", String.valueOf(SEARCH_LIMIT));
-//        return sendRequestAndGetResponse(request);
-//    }
-//
-//    public String searchByBusinessId(String businessID) {
-//        OAuthRequest request = createOAuthRequest(BUSINESS_PATH + "/" + businessID);
-//        return sendRequestAndGetResponse(request);
-//    }
-//
-//
-//    private OAuthRequest createOAuthRequest(String path) {
-//        OAuthRequest request = new OAuthRequest(Verb.GET, "https://" + API_HOST + path);
-//        return request;
-//    }
-//
-//
-//    private String sendRequestAndGetResponse(OAuthRequest request) {
-//        System.out.println("Querying " + request.getCompleteUrl() + " ...");
-//        this.service.signRequest(this.accessToken, request);
-//        Response response = request.send();
-//        return response.getBody();
-//    }
-//
-//
-//    private static class YelpAPICLI {
-//        @Parameter(names = {"-q", "--term"}, description = "Search Query Term")
-//        public String term = DEFAULT_TERM;
-//
-//        @Parameter(names = {"-l", "--location"}, description = "Location to be Queried")
-//        public String location = DEFAULT_LOCATION;
-//    }
-
-
 
     @Override
     public void onPerformSync(Account account, Bundle extras, String authority, ContentProviderClient provider, SyncResult syncResult) {
 
 
         Yelp yelp = new Yelp(consumerKey, consumerSecret, token, tokenSecret);
-        String response = yelp.search("church", 30.361471, -87.164326);
+        String response = yelp.search("church", extras.getDouble("lat"), extras.getDouble("lon"));
 
         try {
             extractData(response);
@@ -222,9 +88,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter{
             JSONObject resultJson = new JSONObject(resultJsonStr);
             JSONArray churchArray = resultJson.getJSONArray(ROOT);
 
-            if(resultJson.has(ROOT)) {
-
-                for (int i = 0; i < churchArray.length(); i++) {
+                for (int i = 1; i < churchArray.length(); i++) {
 
                     JSONObject churchObject = churchArray.getJSONObject(i);
                     JSONObject LocObj = churchObject.getJSONObject(LOCATION);
@@ -302,9 +166,6 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter{
                         builder.withValue(QuoteColumns.FLAG_B, churchObject.getString(RATE));
                     }
 
-                    //builder.build();
-
-
                     ArrayList<ContentProviderOperation> batchOperations = new ArrayList<>();
                     batchOperations.add(builder.build());
 
@@ -315,11 +176,12 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter{
                     } catch (RemoteException | OperationApplicationException e) {
                         Log.d(LOG_TAG, "Error inserting", e);
                     }
-
-
                 }
+
+            resultJsonStr=null;
+            churchArray=null;
                 Log.d(LOG_TAG, "Sync Complete. data Inserted");
-            }
+
 
         } catch (JSONException e) {
             Log.e(LOG_TAG, e.getMessage(), e);
@@ -348,10 +210,12 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter{
      * Helper method to have the sync adapter sync immediately
      * @param context The context used to access the account service
      */
-    public static void syncImmediately(Context context) {
+    public static void syncImmediately(Context context, double lat, double lon) {//
         Bundle bundle = new Bundle();
         bundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
         bundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+        bundle.putDouble("lat", lat);
+        bundle.putDouble("lon", lon);
         ContentResolver.requestSync(getSyncAccount(context),
                 context.getString(R.string.content_authority), bundle);
     }
@@ -401,7 +265,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter{
         /*
          * Finally, let's do a sync to get things started
          */
-        syncImmediately(context);
+        syncImmediately(context, 0, 0);
     }
 
 
