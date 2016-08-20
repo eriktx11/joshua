@@ -44,21 +44,15 @@
             </intent-filter>
         </activity>
 
-        <!--<activity-->
-            <!--android:name=".MapsActivity"-->
-            <!--android:label="@string/app_name">-->
-            <!--<meta-data-->
-                <!--android:name="android.support.PARENT_ACTIVITY"-->
-                <!--android:value="mem.edu.joshua.MainActivity"/>-->
+        <activity
+            android:name=".DetailActivity"
+            android:label="@string/detail_view"
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="mem.edu.joshua"/>
+        </activity>
 
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN"/>-->
-
-                <!--<category android:name="android.intent.category.LAUNCHER"/>-->
-            <!--</intent-filter>-->
-        <!--</activity>-->
-
-        <!-- android:accountType="com.clashtoolkit.clashtoolkit" -->
         <service android:name=".sync.AuthenticatorService">
             <intent-filter>
                 <action android:name="android.accounts.AccountAuthenticator"/>
@@ -70,7 +64,6 @@
         </service>
 
         <!-- The SyncAdapter service -->
-        <!-- android:allowParallelSyncs="true" -->
         <service
             android:name=".sync.SyncService"
             android:exported="true">

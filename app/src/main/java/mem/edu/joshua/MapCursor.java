@@ -77,7 +77,7 @@ public class MapCursor extends CursorAdapter {
 
 
         int layoutId = -1;
-        layoutId = R.layout.yelp_map;
+        //layoutId = R.layout.yelp_map;
 
         View view = LayoutInflater.from(context).inflate(layoutId, parent, false);
 

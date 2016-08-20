@@ -4,4 +4,6 @@
     <string name="sync_account_type">mem.edu.joshua</string>
     <string name="content_authority">mem.edu.joshua.data.QuoteProvider</string>
     <string name="title_activity_yelp_map">Map</string>
+    <string name="detail_view">Details</string>
+    <string name="website">Visit Website</string>
 </resources>

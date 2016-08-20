@@ -32,6 +32,7 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.google.android.gms.location.places.Place;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -44,6 +45,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.util.HashMap;
 
 import mem.edu.joshua.data.QuoteColumns;
 import mem.edu.joshua.data.QuoteProvider;
@@ -70,6 +73,13 @@ public class MapsActivity extends Fragment implements LoaderManager.LoaderCallba
     private GoogleMap mMap;
     MapView mMapView;
     MapView m;
+    private static String website;
+    private static String title;
+    private static String url_img;
+    private static String address;
+    private static String city;
+    private static String phone;
+    private HashMap<String, HashMap> HashMarker = new HashMap<String, HashMap>();
     private GoogleMap googleMap;
 
         private static final String FRAGMENT_LISTS =
@@ -146,7 +156,7 @@ public class MapsActivity extends Fragment implements LoaderManager.LoaderCallba
 //    }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         //getLoaderManager().initLoader(CURSOR_LOADER_ID, null, this);
@@ -160,7 +170,9 @@ public class MapsActivity extends Fragment implements LoaderManager.LoaderCallba
 
 
         initQueryCursor = getActivity().getContentResolver().query(QuoteProvider.Quotes.CONTENT_URI,
-                new String[]{QuoteColumns.LATITUDE, QuoteColumns.LOGITUDE, QuoteColumns.ID_BUSINESS_NAME}, null,
+                new String[]{QuoteColumns.URL, QuoteColumns.DISPLAY_PHONE, QuoteColumns.RATING_IMG,
+                        QuoteColumns.ID_BUSINESS_NAME, QuoteColumns.DISPLAY_ADDRESS, QuoteColumns.POSTAL_CODE,
+                        QuoteColumns.LATITUDE, QuoteColumns.LOGITUDE}, null,
                 null, null);
 
         LatLngBounds.Builder builder = new LatLngBounds.Builder();
@@ -168,11 +180,14 @@ public class MapsActivity extends Fragment implements LoaderManager.LoaderCallba
 
             DatabaseUtils.dumpCursor(initQueryCursor);
             initQueryCursor.moveToFirst();
+
+
             for (int i = 0; i < initQueryCursor.getCount(); i++) {
+
 
                 home = new LatLng(Double.valueOf(initQueryCursor.getString(initQueryCursor.getColumnIndex("latitude"))),
                         Double.valueOf(initQueryCursor.getString(initQueryCursor.getColumnIndex("longitude"))));
-                mMap.addMarker(new MarkerOptions().position(home).
+                Marker m = mMap.addMarker(new MarkerOptions().position(home).
                         title(initQueryCursor.getString(initQueryCursor.getColumnIndex("id_bussines_name"))));
 
                 initQueryCursor.moveToNext();
@@ -181,6 +196,22 @@ public class MapsActivity extends Fragment implements LoaderManager.LoaderCallba
             if(home!=null) {
                 mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), 215, 210, 0));
             }
+            initQueryCursor.close();
+
+            mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+
+                public void onInfoWindowClick(Marker marker) {
+
+
+                    Intent intent = new Intent(getContext(), DetailActivity.class);
+                    intent.putExtra("title", marker.getTitle());
+                    startActivity(intent);
+
+                }
+
+
+            });
+
         }
 
         return v;
