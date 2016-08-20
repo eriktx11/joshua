@@ -8,6 +8,7 @@ import android.content.ContentProviderClient;
 import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.Intent;
 import android.content.OperationApplicationException;
 import android.content.SyncRequest;
 import android.content.SyncResult;
@@ -35,6 +36,8 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter{
     private static final long DAY_IN_MILLIS = 11000;//1000 * 60 * 60 * 24;
     private static final int WEATHER_NOTIFICATION_ID = 3004;
 
+    public static final String ACTION_DATA_UPDATED =
+            "com.sam_chordas.android.stockhawk.ACTION_DATA_UPDATED";
 
     String consumerKey = BuildConfig.YELP_CONSUMER_KEY;
     String consumerSecret = BuildConfig.YELP_CONSUMER_SECRET;
@@ -45,6 +48,16 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter{
         super(context, autoInitialize);
 
     }
+
+
+    private void updateWidgets() {
+        Context context = getContext();
+        // Setting the package ensures that only components in our app will receive the broadcast
+        Intent dataUpdatedIntent = new Intent(ACTION_DATA_UPDATED)
+                .setPackage(context.getPackageName());
+        context.sendBroadcast(dataUpdatedIntent);
+    }
+
 
     @Override
     public void onPerformSync(Account account, Bundle extras, String authority, ContentProviderClient provider, SyncResult syncResult) {

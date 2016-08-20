@@ -21,6 +21,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.ShareActionProvider;
 import android.text.Layout;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -31,6 +32,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.zip.Inflater;
 
 import mem.edu.joshua.data.QuoteColumns;
@@ -40,7 +43,7 @@ import mem.edu.joshua.data.QuoteProvider;
  * Created by erikllerena on 8/18/16.
  */
 public class DetailActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>{
-
+    public static final String LOG_TAG = DetailActivity.class.getSimpleName();
 
     private TextView textTitle;
     private TextView textWebsite;
@@ -49,6 +52,7 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
     private TextView textCity;
     private TextView textPhone;
     private static String visiting;
+    private static String callingout;
     private static final int DETAIL_LOADER = 0;
 
 
@@ -147,6 +151,23 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
             textAddress.setText(data.getString(data.getColumnIndex("display_address")));
             textCity.setText(data.getString(data.getColumnIndex("postal_code")));
             textPhone.setText(data.getString(data.getColumnIndex("display_phone")));
+
+//            callingout=data.getString(data.getColumnIndex("display_phone"));
+//            textPhone.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    Uri uri = Uri.parse(callingout);
+//                    Intent callIntent = new Intent(Intent.ACTION_CALL, uri);
+//                    try {
+//                        startActivity(callIntent);
+//                    }catch (Exception exception){
+//                        Log.e(LOG_TAG, "Not working phone call");
+//                    }
+//
+//                }
+//            });
+
+            Picasso.with(getBaseContext()).load(data.getString(data.getColumnIndex("rating_img"))).resize(205, 45).into(rateImg);
 
             data.close();
         }

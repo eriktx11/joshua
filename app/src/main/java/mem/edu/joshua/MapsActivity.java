@@ -2,68 +2,39 @@ package mem.edu.joshua;
 
 
 
-import android.app.Activity;
-import android.support.v4.app.FragmentTransaction;
-//import android.app.FragmentTransaction;
-import android.app.LocalActivityManager;
+
 import android.content.Intent;
 import android.database.DatabaseUtils;
-import android.graphics.drawable.Drawable;
 import android.support.v4.app.FragmentManager;
-//import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.LoaderManager;
-import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.content.Context;
 import android.database.Cursor;
-import android.location.Location;
 
-//import android.app.Fragment;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewParent;
-import android.view.Window;
-import android.widget.FrameLayout;
-import android.widget.LinearLayout;
-import android.widget.Toast;
 
-import com.google.android.gms.location.places.Place;
+
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.MapView;
-import com.google.android.gms.maps.MapsInitializer;
-import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.util.HashMap;
-
 import mem.edu.joshua.data.QuoteColumns;
 import mem.edu.joshua.data.QuoteProvider;
 import mem.edu.joshua.sync.SyncAdapter;
 
 public class MapsActivity extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
-//OnMapReadyCallback,
-    //GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks,
     public static final String LOG_TAG = MapsActivity.class.getSimpleName();
 
     private static final int CURSOR_LOADER_ID = 0;
 
-    private Context mContext;
-
-
-    private MapCursor mMapCursor;
-    protected Location mLastLocation;
     private Cursor initQueryCursor;
     private GetSet coord;
     private AppPreferences sPref;
@@ -71,18 +42,8 @@ public class MapsActivity extends Fragment implements LoaderManager.LoaderCallba
     private SupportMapFragment sMap;
     private FragmentManager fm;
     private GoogleMap mMap;
-    MapView mMapView;
-    MapView m;
-    private static String website;
-    private static String title;
-    private static String url_img;
-    private static String address;
-    private static String city;
-    private static String phone;
-    private HashMap<String, HashMap> HashMarker = new HashMap<String, HashMap>();
-    private GoogleMap googleMap;
 
-        private static final String FRAGMENT_LISTS =
+    private static final String FRAGMENT_LISTS =
                 "net.simonvt.schematic.samples.ui.SampleActivity.LISTS";
 
 //    public static interface Callbacks {
@@ -397,36 +358,4 @@ public class MapsActivity extends Fragment implements LoaderManager.LoaderCallba
     public void onLoaderReset(Loader<Cursor> loader) {
 
     }
-//
-//    @Override
-//    public void onMapReady(GoogleMap googleMap) {
-//        LatLngBounds.Builder builder = new LatLngBounds.Builder();
-//
-//        mMap = googleMap;
-//
-//        initQueryCursor = getActivity().getContentResolver().query(QuoteProvider.Quotes.CONTENT_URI,
-//                new String[]{QuoteColumns.LATITUDE, QuoteColumns.LOGITUDE, QuoteColumns.ID_BUSINESS_NAME}, null,
-//                null, null);
-//
-//
-//        if (initQueryCursor != null) {
-//
-//            DatabaseUtils.dumpCursor(initQueryCursor);
-//            initQueryCursor.moveToFirst();
-//            for (int i = 0; i < initQueryCursor.getCount(); i++) {
-//
-//                home = new LatLng(Double.valueOf(initQueryCursor.getString(initQueryCursor.getColumnIndex("latitude"))),
-//                        Double.valueOf(initQueryCursor.getString(initQueryCursor.getColumnIndex("longitude"))));
-//                mMap.addMarker(new MarkerOptions().position(home).
-//                        title(initQueryCursor.getString(initQueryCursor.getColumnIndex("id_bussines_name"))));
-//
-//                initQueryCursor.moveToNext();
-//
-//                builder.include(home);
-//            }
-//            if(home!=null) {
-//                mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), 91, 91, 42));
-//            }
-//        }
-//    }
 }
