@@ -15,6 +15,7 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewCompat;
+import android.support.v4.widget.CursorAdapter;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
@@ -45,52 +46,43 @@ import mem.edu.joshua.data.QuoteProvider;
 public class DetailActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>{
     public static final String LOG_TAG = DetailActivity.class.getSimpleName();
 
-    private TextView textTitle;
-    private TextView textWebsite;
-    private ImageView rateImg;
-    private TextView textAddress;
-    private TextView textCity;
-    private TextView textPhone;
     private static String visiting;
     private static String callingout;
     private static final int DETAIL_LOADER = 0;
-
-
-             @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        setContentView(R.layout.detail_view);
-
-        Intent intent = getIntent();
-        Bundle bundle = new Bundle();
-        bundle.putString("title", intent.getStringExtra("title"));
-
-
-//        TextView textTitle = (TextView) findViewById(R.id.name_txt_id);
-//        TextView textWebsite = (TextView) findViewById(R.id.website_txt_id);
-//        ImageView rateImg = (ImageView) findViewById(R.id.rate_img_id);
-//        TextView textAddress = (TextView) findViewById(R.id.address_txt_id);
-//        TextView textCity = (TextView) findViewById(R.id.city_txt_id);
-//        TextView textPhone = (TextView) findViewById(R.id.phone_txt_id);
-////
-//        textTitle.setText(intent.getExtras().getString("title"));
-//        textWebsite.setText(intent.getExtras().getString("website"));
-//        //rateImg.setText(intent.getExtras().getString("rate"));
-//        textAddress.setText(intent.getExtras().getString("address"));
-//        textCity.setText(intent.getExtras().getString("city"));
-//        textPhone.setText(intent.getExtras().getString("phone"));
-
-
-        getSupportLoaderManager().initLoader(DETAIL_LOADER, bundle, this);
-    }
+    Cursor c;
 
 
     @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        if (savedInstanceState == null) {
+            setContentView(R.layout.detail_view);
+            Intent intent = getIntent();
+            Bundle bundle = new Bundle();
+            bundle.putString("title", intent.getStringExtra("title"));
+
+            getSupportLoaderManager().initLoader(DETAIL_LOADER, bundle, this);
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+
+        Intent intent = getIntent();
+        savedInstanceState.putString("title", intent.getStringExtra("title"));
+        super.onSaveInstanceState(savedInstanceState);
+    }
+
+
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        setContentView(R.layout.detail_view);
+        getSupportLoaderManager().restartLoader(DETAIL_LOADER, savedInstanceState, this);
+        super.onRestoreInstanceState(savedInstanceState);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
-        //int id = item.getItemId();
-
         switch (item.getItemId()) {
             case android.R.id.home:
                 Intent intent = NavUtils.getParentActivityIntent(this);
@@ -98,11 +90,8 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
                 NavUtils.navigateUpTo(this, intent);
                 return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
-
-
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
@@ -133,9 +122,6 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
             TextView textAddress = (TextView)findViewById(R.id.address_txt_id);
             TextView textCity = (TextView)findViewById(R.id.city_txt_id);
             TextView textPhone = (TextView)findViewById(R.id.phone_txt_id);
-
-
-            Intent intent = getIntent();
 
             visiting = data.getString(data.getColumnIndex("url"));
             textTitle.setText(data.getString(data.getColumnIndex("id_bussines_name")));
@@ -169,10 +155,12 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
 
             Picasso.with(getBaseContext()).load(data.getString(data.getColumnIndex("rating_img"))).resize(205, 45).into(rateImg);
 
+            c=data;
             data.close();
         }
     }
 
     @Override
-    public void onLoaderReset(Loader<Cursor> loader) { }
+    public void onLoaderReset(Loader<Cursor> loader) {
+    }
 }

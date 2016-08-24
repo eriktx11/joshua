@@ -22,8 +22,8 @@
                 android:contentDescription="@string/app_name"
                 android:layout_gravity="center"
                 android:src="@mipmap/ic_launcher"
-                android:paddingRight="8dp"
-                android:paddingLeft="5dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="5dp"
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"/>
 
@@ -31,7 +31,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="Joshua"
+                android:text="@string/Joshua"
                 android:id="@+id/textView2"
                 android:layout_gravity="center_vertical"/>
         </LinearLayout>
@@ -48,7 +48,8 @@
             android:divider="@null"
             android:dividerHeight="0dp"
             tools:listitem="@layout/layout_widget_list_item"
-            android:paddingLeft="10dp"/>
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"/>
 
     </FrameLayout>
 

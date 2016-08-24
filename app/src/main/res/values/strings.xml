@@ -6,4 +6,6 @@
     <string name="title_activity_yelp_map">Map</string>
     <string name="detail_view">Details</string>
     <string name="website">Visit Website</string>
+    <string name="church_name">church name</string>
+    <string name="Joshua">Joshua</string>
 </resources>
