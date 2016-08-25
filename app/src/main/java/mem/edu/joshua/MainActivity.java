@@ -1,7 +1,15 @@
 package mem.edu.joshua;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.IntentFilter;
+import android.database.ContentObserver;
 import android.location.Criteria;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.PersistableBundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -19,23 +27,19 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.BooleanResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.firebase.FirebaseOptions;
 
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
 
 
+import mem.edu.joshua.data.QuoteProvider;
 import mem.edu.joshua.sync.SyncAdapter;
 
 /**
@@ -50,11 +54,9 @@ public class MainActivity extends AppCompatActivity implements ConnectionCallbac
     private GetSet coord = new GetSet();
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
-    private Location location;
-    private MapCursor mMapCursor;
-    protected Location mLastLocation;
     private AppPreferences sPref;
     private Fragment fragment;
+    private ContentObserver mObserver;
 
     protected synchronized void buildGoogleApiClient() {
         mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -65,37 +67,52 @@ public class MainActivity extends AppCompatActivity implements ConnectionCallbac
         }
 
     Boolean go=false;
+    boolean isConnected;
+
+
+    public static final String ACTION_FINISHED_SYNC = "mem.edu.joshua.ACTION_FINISHED_SYNC";
+    private static IntentFilter syncIntentFilter = new IntentFilter(ACTION_FINISHED_SYNC);
+
+    private BroadcastReceiver syncBroadcastReceiver = new BroadcastReceiver() {
+        @Override public void onReceive(Context context, Intent intent) {
+            // update your views
+            setContentView(R.layout.yelp_google_map);
+
+            fragment = Fragment.instantiate(getBaseContext(), MapsActivity.class.getName());
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.map, fragment);
+            ft.commit();
+        }
+    };
+
+    @Override protected void onResume() {
+        super.onResume();
+        // register for sync
+        registerReceiver(syncBroadcastReceiver, syncIntentFilter);
+        // do your resuming magic
+    }
+
+    @Override protected void onPause() {
+        unregisterReceiver(syncBroadcastReceiver);
+//        fragment.onPause();
+        super.onPause();
+    };
+
+
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBoolean("go", true);
-        fragment.onSaveInstanceState(outState);
-    }
-
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        setContentView(R.layout.yelp_google_map);
-        fragment = Fragment.instantiate(this, MapsActivity.class.getName());
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.map, fragment);
-        ft.commit();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        fragment.onPause();
+//        fragment.onSaveInstanceState(outState);
     }
 
 
     @Override
     public void onLowMemory() {
         super.onLowMemory();
-        fragment.onLowMemory();
+        Toast.makeText(this, getString(R.string.low_mem), Toast.LENGTH_LONG).show();
+        //fragment.onLowMemory();
     }
 
 
@@ -111,14 +128,33 @@ public class MainActivity extends AppCompatActivity implements ConnectionCallbac
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        buildGoogleApiClient();
-        sPref = new AppPreferences(getBaseContext());
 
+
+        ConnectivityManager cm =
+                (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+
+        if(isConnected){
+
+            Toast.makeText(this, getString(R.string.loading), Toast.LENGTH_LONG).show();
+
+            sPref = new AppPreferences(getBaseContext());
+            SyncAdapter.initializeSyncAdapter(getBaseContext());
+
+            buildGoogleApiClient();
+        }else {
+            Toast.makeText(this, getString(R.string.network_toast), Toast.LENGTH_LONG).show();
+        }
+        sPref = new AppPreferences(getBaseContext());
     }
 
     @Override
     protected void onStart() {
-        mGoogleApiClient.connect();
+        if(isConnected) {
+            mGoogleApiClient.connect();
+        }
         super.onStart();
     }
 
@@ -126,8 +162,10 @@ public class MainActivity extends AppCompatActivity implements ConnectionCallbac
     @Override
     protected void onStop() {
         super.onStop();
-        if (mGoogleApiClient.isConnected()) {
-        mGoogleApiClient.disconnect();
+        if(isConnected) {
+            if (mGoogleApiClient.isConnected()) {
+                mGoogleApiClient.disconnect();
+            }
         }
     }
 
@@ -141,9 +179,7 @@ public class MainActivity extends AppCompatActivity implements ConnectionCallbac
     sPref.saveCoordBody("lat", coord.getLat());
     sPref.saveCoordBody("lon", coord.getLon());
 
-    SyncAdapter.initializeSyncAdapter(this);
-
-        }
+    }
 
 
     @Override
@@ -172,6 +208,12 @@ public class MainActivity extends AppCompatActivity implements ConnectionCallbac
 
                 sPref.saveCoordBody("lat", coord.getLat());
                 sPref.saveCoordBody("lon", coord.getLon());
+
+
+                SyncAdapter.syncImmediately(getBaseContext(),
+                        sPref.getCoordBody("lat"),
+                        sPref.getCoordBody("lon"));
+
             }
 
         }catch  (SecurityException e) {

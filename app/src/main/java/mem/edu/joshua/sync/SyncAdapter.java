@@ -21,6 +21,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import java.util.ArrayList;
 import mem.edu.joshua.BuildConfig;
+import mem.edu.joshua.MainActivity;
+import mem.edu.joshua.MapsActivity;
 import mem.edu.joshua.R;
 import mem.edu.joshua.Yelp;
 import mem.edu.joshua.data.QuoteColumns;
@@ -186,14 +188,21 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter{
                         Context mContext = getContext();
                         mContext.getContentResolver().applyBatch(QuoteProvider.AUTHORITY,
                                 batchOperations);
+                        Log.d(LOG_TAG, "Sync Complete. data Inserted");
+
+                        getContext().sendBroadcast(new Intent(MainActivity.ACTION_FINISHED_SYNC));
+
                     } catch (RemoteException | OperationApplicationException e) {
                         Log.d(LOG_TAG, "Error inserting", e);
                     }
                 }
 
-            resultJsonStr=null;
-            churchArray=null;
-                Log.d(LOG_TAG, "Sync Complete. data Inserted");
+//            resultJsonStr=null;
+//            churchArray=null;
+
+
+
+//            getContext().getContentResolver().notifyChange(QuoteProvider.Quotes.CONTENT_URI, null, false);
 
 
         } catch (JSONException e) {

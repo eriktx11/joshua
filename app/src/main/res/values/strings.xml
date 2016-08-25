@@ -8,4 +8,7 @@
     <string name="website">Visit Website</string>
     <string name="church_name">church name</string>
     <string name="Joshua">Joshua</string>
+    <string name="network_toast">Please enable Network and GPS on device</string>
+    <string name="loading">Loading your data</string>
+    <string name="low_mem">Low memory</string>
 </resources>
