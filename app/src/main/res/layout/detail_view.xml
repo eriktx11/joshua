@@ -21,10 +21,10 @@
         android:gravity="center_horizontal"/>
 
     <ImageView
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/rate_img_id"
-        android:layout_gravity="center_vertical"/>
+        android:gravity="center_horizontal"/>
 
     <TextView
         android:layout_width="match_parent"
@@ -32,7 +32,7 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Medium Text"
         android:id="@+id/address_txt_id"
-        android:gravity="left"/>
+        android:gravity="start"/>
 
     <TextView
         android:layout_width="match_parent"
@@ -40,7 +40,7 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Medium Text"
         android:id="@+id/city_txt_id"
-        android:gravity="left"/>
+        android:gravity="start"/>
 
     <TextView
         android:layout_width="match_parent"
@@ -48,5 +48,5 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Large Text"
         android:id="@+id/phone_txt_id"
-        android:gravity="left"/>
+        android:gravity="start"/>
 </LinearLayout>

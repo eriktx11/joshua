@@ -29,10 +29,6 @@ import mem.edu.joshua.data.QuoteProvider;
 public class DetailWidgetRemoteViewsService extends RemoteViewsService {
     public final String LOG_TAG = DetailWidgetRemoteViewsService.class.getSimpleName();
 
-//    public final TextView symbol;
-//    public final TextView bidPrice;
-//    public final TextView change;
-
 
     @Override
     public RemoteViewsFactory onGetViewFactory(Intent intent) {
@@ -41,7 +37,6 @@ public class DetailWidgetRemoteViewsService extends RemoteViewsService {
 
             @Override
             public void onCreate() {
-                // Nothing to do
             }
 
             @Override
@@ -49,18 +44,12 @@ public class DetailWidgetRemoteViewsService extends RemoteViewsService {
                 if (data != null) {
                     data.close();
                 }
-                // This method is called by the app hosting the widget (e.g., the launcher)
-                // However, our ContentProvider is not exported so it doesn't have access to the
-                // data. Therefore we need to clear (and finally restore) the calling identity so
-                // that calls use our process and permission
                 final long identityToken = Binder.clearCallingIdentity();
 
                 data = getContentResolver().query(QuoteProvider.Quotes.CONTENT_URI,
                         new String[]{QuoteColumns._ID, QuoteColumns.ID_BUSINESS_NAME, QuoteColumns.RATING_IMG},
-                        //QuoteColumns.ISCURRENT + " = ?",
                         null,
                         null,
-                        //new String[]{"1"},
                         null);
 
 
@@ -98,19 +87,8 @@ public class DetailWidgetRemoteViewsService extends RemoteViewsService {
                     setRemoteContentDescription(views, data.getString(data.getColumnIndex("id_bussines_name")));
                 }
 
-
-//                symbol = (TextView) findViewById(R.id.stock_symbol);
-//                bidPrice = (TextView) itemView.findViewById(R.id.bid_price);
-                //ImageView rateImg = (ImageView) viewHolder.findViewById(R.id.imageView);
-
-//                viewHolder.symbol.setText(data.getString(data.getColumnIndex("symbol")));
-//                viewHolder.bidPrice.setText(data.getString(data.getColumnIndex("bid_price")));
-
                 views.setTextViewText(R.id.textView, data.getString(data.getColumnIndex("id_bussines_name")));
                 setRemoteContentDescription(views, data.getString(data.getColumnIndex("id_bussines_name")));
-                //Picasso.with(getBaseContext()).load(data.getString(data.getColumnIndex("rating_img"))).resize(205, 45).into(rateImg);
-//                views.setTextViewText(R.id.bid_price, data.getString(data.getColumnIndex("bid_price")));
-//                views.setTextViewText(R.id.change, data.getString(data.getColumnIndex("change")));
 
                 try {
                     Bitmap b = Picasso.with(getBaseContext()).load(data.getString(data.getColumnIndex("rating_img"))).get();
@@ -124,7 +102,6 @@ public class DetailWidgetRemoteViewsService extends RemoteViewsService {
                     fillInIntent.setData(QuoteProvider.Quotes.CONTENT_URI);
                     fillInIntent.putExtra("title", data.getString(data.getColumnIndex("id_bussines_name")));
                     views.setOnClickFillInIntent(R.id.tapWidId, fillInIntent);
-                    //views.setOnClickFillInIntent(R.id.stock_symbol, fillInIntent);
 
                     return views;
                 }
@@ -144,7 +121,7 @@ public class DetailWidgetRemoteViewsService extends RemoteViewsService {
                 @Override
                 public long getItemId ( int position){
                     if (data.moveToPosition(position))
-                        return data.getColumnIndex("_id"); //column index
+                        return data.getColumnIndex("_id");
                     return position;
                 }
 

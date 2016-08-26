@@ -1,14 +1,19 @@
 <resources>
-    <string name="app_name">Joshua | church finder - by Yelp</string>
+    <string name="app_name" translatable="false">Joshua | church finder - by Yelp</string>
+
     <string name="title_activity_maps">Map</string>
-    <string name="sync_account_type">mem.edu.joshua</string>
-    <string name="content_authority">mem.edu.joshua.data.QuoteProvider</string>
+    <string name="sync_account_type" translatable="false">mem.edu.joshua</string>
+    <string name="content_authority" translatable="false">mem.edu.joshua.data.QuoteProvider</string>
     <string name="title_activity_yelp_map">Map</string>
     <string name="detail_view">Details</string>
     <string name="website">Visit Website</string>
     <string name="church_name">church name</string>
-    <string name="Joshua">Joshua</string>
+    <string name="Joshua" translatable="false">Joshua</string>
     <string name="network_toast">Please enable Network and GPS on device</string>
     <string name="loading">Loading your data</string>
     <string name="low_mem">Low memory</string>
+    <string name="search">church</string>
+    <string name="insert_data">Sync Complete. data Inserted</string>
+    <string name="error_insert">Error inserting</string>
+    <string name="img_desc">one to five star rate</string>
 </resources>

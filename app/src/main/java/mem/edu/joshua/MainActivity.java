@@ -8,25 +8,17 @@ import android.location.Criteria;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.PersistableBundle;
-import android.support.v4.app.Fragment;
+import android.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Layout;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -66,7 +58,7 @@ public class MainActivity extends AppCompatActivity implements ConnectionCallbac
         .build();
         }
 
-    Boolean go=false;
+//    Boolean go=false;
     boolean isConnected;
 
 
@@ -79,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements ConnectionCallbac
             setContentView(R.layout.yelp_google_map);
 
             fragment = Fragment.instantiate(getBaseContext(), MapsActivity.class.getName());
-            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
             ft.replace(R.id.map, fragment);
             ft.commit();
         }
@@ -89,23 +81,21 @@ public class MainActivity extends AppCompatActivity implements ConnectionCallbac
         super.onResume();
         // register for sync
         registerReceiver(syncBroadcastReceiver, syncIntentFilter);
-        // do your resuming magic
     }
 
     @Override protected void onPause() {
         unregisterReceiver(syncBroadcastReceiver);
-//        fragment.onPause();
         super.onPause();
     };
 
 
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putBoolean("go", true);
-//        fragment.onSaveInstanceState(outState);
-    }
+//    @Override
+//    public void onSaveInstanceState(Bundle outState) {
+//        super.onSaveInstanceState(outState);
+//        outState.putBoolean("go", true);
+////        fragment.onSaveInstanceState(outState);
+//    }
 
 
     @Override
@@ -116,14 +106,14 @@ public class MainActivity extends AppCompatActivity implements ConnectionCallbac
     }
 
 
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        go=savedInstanceState.getBoolean("go");
-        savedInstanceState.putBoolean("go", false);
-
-
-    }
+//    @Override
+//    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+//        super.onRestoreInstanceState(savedInstanceState);
+//        go=savedInstanceState.getBoolean("go");
+//        savedInstanceState.putBoolean("go", false);
+//
+//
+//    }
 
     @Override
     public void onCreate(Bundle savedInstanceState){
@@ -185,9 +175,10 @@ public class MainActivity extends AppCompatActivity implements ConnectionCallbac
     @Override
     public void onConnected(@Nullable Bundle bundle) {
 
+        int interval = 1000*60*60*2;
         mLocationRequest = LocationRequest.create();
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        mLocationRequest.setInterval(60000);
+        mLocationRequest.setInterval(interval);
 
 
         try {

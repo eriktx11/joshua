@@ -119,13 +119,16 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
             TextView textTitle = (TextView)findViewById(R.id.name_txt_id);
             TextView textWebsite = (TextView)findViewById(R.id.website_txt_id);
             ImageView rateImg = (ImageView)findViewById(R.id.rate_img_id);
+            rateImg.setContentDescription(getBaseContext().getString(R.string.img_desc));
             TextView textAddress = (TextView)findViewById(R.id.address_txt_id);
             TextView textCity = (TextView)findViewById(R.id.city_txt_id);
             TextView textPhone = (TextView)findViewById(R.id.phone_txt_id);
 
             visiting = data.getString(data.getColumnIndex("url"));
             textTitle.setText(data.getString(data.getColumnIndex("id_bussines_name")));
+            textTitle.setContentDescription(data.getString(data.getColumnIndex("id_bussines_name")));
             textWebsite.setText(R.string.website);
+            textWebsite.setContentDescription(getBaseContext().getString(R.string.website));
             textWebsite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -135,9 +138,11 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
             }
             });
             textAddress.setText(data.getString(data.getColumnIndex("display_address")));
+            textAddress.setContentDescription(data.getString(data.getColumnIndex("display_address")));
             textCity.setText(data.getString(data.getColumnIndex("postal_code")));
+            textCity.setContentDescription(data.getString(data.getColumnIndex("postal_code")));
             textPhone.setText(data.getString(data.getColumnIndex("display_phone")));
-
+            textPhone.setContentDescription(data.getString(data.getColumnIndex("display_phone")));
 //            callingout=data.getString(data.getColumnIndex("display_phone"));
 //            textPhone.setOnClickListener(new View.OnClickListener() {
 //                @Override
@@ -152,7 +157,6 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
 //
 //                }
 //            });
-
             Picasso.with(getBaseContext()).load(data.getString(data.getColumnIndex("rating_img"))).resize(205, 45).into(rateImg);
 
             c=data;

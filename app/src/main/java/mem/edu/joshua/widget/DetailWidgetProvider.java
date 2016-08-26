@@ -12,6 +12,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.TaskStackBuilder;
 import android.widget.RemoteViews;
 
+import mem.edu.joshua.MainActivity;
 import mem.edu.joshua.R;
 
 import mem.edu.joshua.DetailActivity;
@@ -27,7 +28,7 @@ import mem.edu.joshua.sync.SyncAdapter;
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.layout_widget);
 
             // Create an Intent to launch MainActivity
-            Intent intent = new Intent(context, DetailActivity.class);
+            Intent intent = new Intent(context, MainActivity.class);
             PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
             views.setOnClickPendingIntent(R.id.widget, pendingIntent);
 
@@ -37,11 +38,10 @@ import mem.edu.joshua.sync.SyncAdapter;
             } else {
                 setRemoteAdapterV11(context, views);
             }
-            boolean useDetailActivity = context.getResources()
-                    .getBoolean(R.bool.use_detail_activity);
+            boolean useDetailActivity = context.getResources().getBoolean(R.bool.widget_true);
             Intent clickIntentTemplate = useDetailActivity
                      ? new Intent(context, DetailActivity.class)
-                    : new Intent(context, DetailActivity.class);
+                    : new Intent(context, MainActivity.class);
             PendingIntent clickPendingIntentTemplate = TaskStackBuilder.create(context)
                     .addNextIntentWithParentStack(clickIntentTemplate)
                     .getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);

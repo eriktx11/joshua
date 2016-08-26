@@ -33,9 +33,9 @@ import mem.edu.joshua.data.QuoteProvider;
  */
 public class SyncAdapter extends AbstractThreadedSyncAdapter{
     public final String LOG_TAG = SyncAdapter.class.getSimpleName();
-    public static final int SYNC_INTERVAL = 400;//60 * 180;
+    public static final int SYNC_INTERVAL = 60 * 180;
     public static final int SYNC_FLEXTIME = SYNC_INTERVAL/3;
-    private static final long DAY_IN_MILLIS = 11000;//1000 * 60 * 60 * 24;
+    private static final long DAY_IN_MILLIS = 1000 * 60 * 60 * 24;
     private static final int WEATHER_NOTIFICATION_ID = 3004;
 
     public static final String ACTION_DATA_UPDATED =
@@ -66,7 +66,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter{
 
 
         Yelp yelp = new Yelp(consumerKey, consumerSecret, token, tokenSecret);
-        String response = yelp.search("church", extras.getDouble("lat"), extras.getDouble("lon"));
+        String response = yelp.search(getContext().getString(R.string.search), extras.getDouble("lat"), extras.getDouble("lon"));
 
         try {
             extractData(response);
@@ -188,22 +188,14 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter{
                         Context mContext = getContext();
                         mContext.getContentResolver().applyBatch(QuoteProvider.AUTHORITY,
                                 batchOperations);
-                        Log.d(LOG_TAG, "Sync Complete. data Inserted");
+                        Log.d(LOG_TAG, getContext().getString(R.string.insert_data));
 
                         getContext().sendBroadcast(new Intent(MainActivity.ACTION_FINISHED_SYNC));
 
                     } catch (RemoteException | OperationApplicationException e) {
-                        Log.d(LOG_TAG, "Error inserting", e);
+                        Log.d(LOG_TAG, getContext().getString(R.string.error_insert), e);
                     }
                 }
-
-//            resultJsonStr=null;
-//            churchArray=null;
-
-
-
-//            getContext().getContentResolver().notifyChange(QuoteProvider.Quotes.CONTENT_URI, null, false);
-
 
         } catch (JSONException e) {
             Log.e(LOG_TAG, e.getMessage(), e);
