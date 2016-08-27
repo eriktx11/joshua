@@ -192,7 +192,7 @@ public class MainActivity extends AppCompatActivity implements ConnectionCallbac
             requestLocationUpdates();
 
             if(permissionIsGranted) {
-                SyncAdapter.initializeSyncAdapter(getBaseContext());
+
                 if (mLocationRequest != null) {
                     Log.e(LOG_TAG, "google working");
 
@@ -247,6 +247,24 @@ public class MainActivity extends AppCompatActivity implements ConnectionCallbac
                     if(grantResults[0]== getPackageManager().PERMISSION_GRANTED){
                         permissionIsGranted=true;
                         Toast.makeText(this, getString(R.string.loading), Toast.LENGTH_SHORT).show();
+                        if (mLocationRequest != null) {
+                            Log.e(LOG_TAG, "google working");
+
+                            LocationManager service = (LocationManager) getSystemService(LOCATION_SERVICE);
+                            Criteria criteria = new Criteria();
+                            String provider = service.getBestProvider(criteria, false);
+                            Location location = service.getLastKnownLocation(provider);
+
+                            coord.setLon(location.getLongitude());
+                            coord.setLat(location.getLatitude());
+
+                            sPref.saveCoordBody("lat", coord.getLat());
+                            sPref.saveCoordBody("lon", coord.getLon());
+
+                            SyncAdapter.syncImmediately(getBaseContext(),
+                                    sPref.getCoordBody("lat"),
+                                    sPref.getCoordBody("lon"));
+                        }
 
                     }else {
                         permissionIsGranted=false;
