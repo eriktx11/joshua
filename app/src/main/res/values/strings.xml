@@ -16,4 +16,10 @@
     <string name="insert_data">Sync Complete. data Inserted</string>
     <string name="error_insert">Error inserting</string>
     <string name="img_desc">one to five star rate</string>
+    <string name="no_permission">Please grant permission to get your Location</string>
+    <string name="setLon">Longiture: Permission not granted</string>
+    <string name="setLat">Latitude: Permission not granted</string>
+    <string name="lat">Latitude granted!</string>
+    <string name="lon">Longitude granted!</string>
+
 </resources>

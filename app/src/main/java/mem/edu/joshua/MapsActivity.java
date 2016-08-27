@@ -13,6 +13,8 @@ import android.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v4.widget.SimpleCursorAdapter;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,6 +37,7 @@ import java.util.zip.Inflater;
 
 import mem.edu.joshua.data.QuoteColumns;
 import mem.edu.joshua.data.QuoteProvider;
+import mem.edu.joshua.sync.SyncAdapter;
 
 public class MapsActivity extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>{
     public static final String LOG_TAG = MapsActivity.class.getSimpleName();
@@ -63,29 +66,27 @@ public class MapsActivity extends Fragment implements LoaderManager.LoaderCallba
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         sPref = new AppPreferences(getActivity());
-
     }
 
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+//    @Override
+//    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+//        super.onViewCreated(view, savedInstanceState);
+//
+//        mapView = (MapView) v.findViewById(R.id.map);
+//        //mapView.onCreate(savedInstanceState);
+//        MapsInitializer.initialize(getActivity());
+//        //mapView.onResume();
+//        mMap = mapView.getMap();
+//        getLoaderManager().restartLoader(CURSOR_LOADER_ID, null, this);
+//    }
 
-//        initQueryCursor = getActivity().getContentResolver().query(QuoteProvider.Quotes.CONTENT_URI,
-//                new String[]{QuoteColumns.URL, QuoteColumns.DISPLAY_PHONE, QuoteColumns.RATING_IMG,
-//                        QuoteColumns.ID_BUSINESS_NAME, QuoteColumns.DISPLAY_ADDRESS, QuoteColumns.POSTAL_CODE,
-//                        QuoteColumns.LATITUDE, QuoteColumns.LOGITUDE}, null,
-//                null, null);
-        //getLoaderManager().restartLoader(CURSOR_LOADER_ID, null, this);
-        mapView = (MapView) v.findViewById(R.id.map);
-        mapView.onCreate(savedInstanceState);
-        MapsInitializer.initialize(getActivity());
-        mapView.onResume();
-        mMap = mapView.getMap();
-        getLoaderManager().initLoader(CURSOR_LOADER_ID, null, this);
-    }
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//        getLoaderManager().restartLoader(CURSOR_LOADER_ID, null, this);
+//    }
 
-
-//    mapView = (MapView) v.findViewById(R.id.map);
+    //    mapView = (MapView) v.findViewById(R.id.map);
 //    mapView.onCreate(savedInstanceState);
 //    MapsInitializer.initialize(getActivity());
 //    mapView.onResume();
@@ -135,6 +136,12 @@ public class MapsActivity extends Fragment implements LoaderManager.LoaderCallba
                              Bundle savedInstanceState) {
 
         v = inflater.inflate(R.layout.yelp_google_map, container, false);
+        mapView = (MapView) v.findViewById(R.id.map);
+        mapView.onCreate(savedInstanceState);
+        MapsInitializer.initialize(getActivity());
+        mapView.onResume();
+        mMap = mapView.getMap();
+        getLoaderManager().restartLoader(CURSOR_LOADER_ID, null, this);
         return v;
     }
 
@@ -156,7 +163,7 @@ public class MapsActivity extends Fragment implements LoaderManager.LoaderCallba
         if(cursor!=null){
 
             cursor.moveToFirst();
-            LatLngBounds.Builder builder = new LatLngBounds.Builder();
+            final LatLngBounds.Builder builder = new LatLngBounds.Builder();
             for (int i = 0; i < cursor.getCount(); i++) {
                 drawMarker(
                         cursor.getString(cursor.getColumnIndex("latitude")),
@@ -167,7 +174,17 @@ public class MapsActivity extends Fragment implements LoaderManager.LoaderCallba
                 cursor.moveToNext();
             }
             if (home != null) {
-                mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), 60));
+                mMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
+                    @Override
+                    public void onMapLoaded() {
+                        mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), 30));
+                    }
+                });
+
+
+
+
+//                        animateCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), 60));
             }
             cursor.close();
         }

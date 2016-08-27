@@ -20,8 +20,18 @@ android {
         javaMaxHeapSize "4g"
     }
 
+    signingConfigs {
+        release {
+            storeFile file("key.jks")
+            storePassword "webweb"
+            keyAlias "web"
+            keyPassword "webweb"
+        }
+    }
+
     buildTypes {
         release {
+            signingConfig signingConfigs.release
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
@@ -32,15 +42,6 @@ android {
         it.buildConfigField 'String', 'YELP_CONSUMER_SECRET', YelpConsumerSecret
         it.buildConfigField 'String', 'YELP_TOKEN', YelpToken
         it.buildConfigField 'String', 'YELP_TOKEN_SECRET', YelpTokenSecret
-    }
-
-    signingConfigs {
-        release {
-            storeFile file("key.keystore")
-            storePassword "webweb"
-            keyAlias "web"
-            keyPassword "webweb"
-        }
     }
 
 }
@@ -57,7 +58,7 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:24.1.1'
     compile 'net.simonvt.schematic:schematic:0.6.3'
     compile 'com.android.support:appcompat-v7:24.1.1'
-    compile 'com.google.firebase:firebase-ads:9.0.2'
+    //compile 'com.google.firebase:firebase-ads:9.0.2'
     compile 'com.squareup.picasso:picasso:2.5.2'
     //compile 'com.google.android.gms:play-services-maps:9.2.1'
     compile 'com.google.android.gms:play-services-maps:9.0.2'

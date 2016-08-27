@@ -52,10 +52,14 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
     Cursor c;
 
 
+    public void uphandler(View v){
+        this.finish();
+    }
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        getSupportActionBar().hide();
         if (savedInstanceState == null) {
             setContentView(R.layout.detail_view);
             Intent intent = getIntent();
@@ -76,22 +80,23 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
 
 
     public void onRestoreInstanceState(Bundle savedInstanceState) {
+        getSupportActionBar().hide();
         setContentView(R.layout.detail_view);
         getSupportLoaderManager().restartLoader(DETAIL_LOADER, savedInstanceState, this);
         super.onRestoreInstanceState(savedInstanceState);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                Intent intent = NavUtils.getParentActivityIntent(this);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                NavUtils.navigateUpTo(this, intent);
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        switch (item.getItemId()) {
+//            case android.R.id.home:
+//                Intent intent = NavUtils.getParentActivityIntent(this);
+//                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP);
+//                NavUtils.navigateUpTo(this, intent);
+//                return true;
+//        }
+//        return super.onOptionsItemSelected(item);
+//    }
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
