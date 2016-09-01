@@ -33,6 +33,8 @@ import mem.edu.joshua.data.QuoteProvider;
  */
 public class SyncAdapter extends AbstractThreadedSyncAdapter{
     public final String LOG_TAG = SyncAdapter.class.getSimpleName();
+
+    //All the synchronization intervals
     public static final int SYNC_INTERVAL = 60 * 180;
     public static final int SYNC_FLEXTIME = SYNC_INTERVAL/3;
     private static final long DAY_IN_MILLIS = 1000 * 60 * 60 * 24;
@@ -41,6 +43,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter{
     public static final String ACTION_DATA_UPDATED =
             "com.sam_chordas.android.stockhawk.ACTION_DATA_UPDATED";
 
+    //find these Buildconfig in app Gradel and gradel.properties
     String consumerKey = BuildConfig.YELP_CONSUMER_KEY;
     String consumerSecret = BuildConfig.YELP_CONSUMER_SECRET;
     String token = BuildConfig.YELP_TOKEN;
@@ -52,6 +55,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter{
     }
 
 
+    //for the home screen widget
     private void updateWidgets() {
         Context context = getContext();
         // Setting the package ensures that only components in our app will receive the broadcast
@@ -79,6 +83,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter{
         return;
     }
 
+    //response above = to resultJsonStr here. : )
     private void extractData(String resultJsonStr)
             throws JSONException {
 
@@ -87,6 +92,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter{
         final String ID_BUSINESS = "name";
         final String URL = "url";
 
+        //Yelp gets the GPS locaion but extracs new locations for map marker for 13 new businesses
         final String LOCATION = "location";
         final String COORDINATES = "coordinate";
         final String LATITUDE = "latitude";
@@ -106,15 +112,16 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter{
                 for (int i = 1; i < churchArray.length(); i++) {
 
                     JSONObject churchObject = churchArray.getJSONObject(i);
-                    JSONObject LocObj = churchObject.getJSONObject(LOCATION);
+                    JSONObject LocObj = churchObject.getJSONObject(LOCATION);//so I can get the address
 
-                    JSONObject coorObject = LocObj.getJSONObject(COORDINATES);
-                    JSONArray AddressArray = LocObj.getJSONArray(DIS_ADDRESS);
+                    JSONObject coorObject = LocObj.getJSONObject(COORDINATES);//so I can get coordinates
+                    JSONArray AddressArray = LocObj.getJSONArray(DIS_ADDRESS);//so I can get phone number
 
 
                     ContentProviderOperation.Builder builder = ContentProviderOperation.newInsert(
                             QuoteProvider.Quotes.CONTENT_URI);
 
+                    //this list of if is because sometimes data is null
                     if (!churchObject.has(RATE)) {
                         builder.withValue(QuoteColumns.RATING, "No rated yet");
                     } else {
@@ -169,13 +176,13 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter{
                         builder.withValue(QuoteColumns.RATING_IMG, churchObject.getString(RATE_IMG));
                     }
 
-                    if (!churchObject.has(RATE)) {
+                    if (!churchObject.has(RATE)) {//column in table not used
                         builder.withValue(QuoteColumns.FLAG_A, "x");
                     } else {
                         builder.withValue(QuoteColumns.FLAG_A, churchObject.getString(RATE));
                     }
 
-                    if (!churchObject.has(RATE)) {
+                    if (!churchObject.has(RATE)) {//column in table not used
                         builder.withValue(QuoteColumns.FLAG_B, "x");
                     } else {
                         builder.withValue(QuoteColumns.FLAG_B, churchObject.getString(RATE));
@@ -184,7 +191,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter{
                     ArrayList<ContentProviderOperation> batchOperations = new ArrayList<>();
                     batchOperations.add(builder.build());
 
-                    try {
+                    try {//procede to insert all in a batch
                         Context mContext = getContext();
                         mContext.getContentResolver().applyBatch(QuoteProvider.AUTHORITY,
                                 batchOperations);
@@ -228,6 +235,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter{
         Bundle bundle = new Bundle();
         bundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
         bundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+        //these are the coord from the GPS so Yelp knows where user is. :)
         bundle.putDouble("lat", lat);
         bundle.putDouble("lon", lon);
         ContentResolver.requestSync(getSyncAccount(context),

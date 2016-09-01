@@ -141,6 +141,8 @@ public class MapsActivity extends Fragment implements LoaderManager.LoaderCallba
         MapsInitializer.initialize(getActivity());
         mapView.onResume();
         mMap = mapView.getMap();
+
+        //this causes the code to jump down to Loder<Cursor> and once done it will jump down to onLoadFinished
         getLoaderManager().restartLoader(CURSOR_LOADER_ID, null, this);
         return v;
     }
@@ -160,10 +162,13 @@ public class MapsActivity extends Fragment implements LoaderManager.LoaderCallba
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
 
+        //Map is here finally drawn :)
         if(cursor!=null){
 
             cursor.moveToFirst();
             final LatLngBounds.Builder builder = new LatLngBounds.Builder();
+
+            //get the data already saved by the syncadaper using their column names
             for (int i = 0; i < cursor.getCount(); i++) {
                 drawMarker(
                         cursor.getString(cursor.getColumnIndex("latitude")),
@@ -181,10 +186,7 @@ public class MapsActivity extends Fragment implements LoaderManager.LoaderCallba
                     }
                 });
 
-
-
-
-//                        animateCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), 60));
+           // animateCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), 60));
             }
             cursor.close();
         }

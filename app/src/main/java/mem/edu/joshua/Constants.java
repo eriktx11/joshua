@@ -1,5 +1,6 @@
 package mem.edu.joshua;
 
+//these are not needed here. Already declared in SyncAdapter
 public class Constants {
     public static final String YELP_CONSUMER_KEY = BuildConfig.YELP_CONSUMER_KEY;
     public static final String YELP_CONSUMER_SECRET = BuildConfig.YELP_CONSUMER_SECRET;

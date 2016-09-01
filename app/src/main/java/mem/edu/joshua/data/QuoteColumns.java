@@ -24,6 +24,8 @@ public class QuoteColumns {
   @DataType(DataType.Type.TEXT)
   public static final String RATING_IMG = "rating_img";
   @DataType(DataType.Type.TEXT)
+
+  //declare to unique otherwise the data keeps growing with duplicates :(
   @Unique(onConflict = ConflictResolutionType.REPLACE)
   public static final String ID_BUSINESS_NAME = "id_bussines_name";
   @DataType(DataType.Type.TEXT)
@@ -35,8 +37,8 @@ public class QuoteColumns {
   @DataType(DataType.Type.TEXT)
   public static final String LOGITUDE = "longitude";
   @DataType(DataType.Type.TEXT)
-  public static final String FLAG_A = "flag_a";
+  public static final String FLAG_A = "flag_a";//added just in case. I didn't use it
   @DataType(DataType.Type.TEXT)
-  public static final String FLAG_B = "flag_b";
+  public static final String FLAG_B = "flag_b";//added just in case. I didn't use it
 
 }

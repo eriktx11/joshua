@@ -34,6 +34,8 @@ import mem.edu.joshua.data.QuoteProvider;
 /**
  * Created by erikllerena on 8/14/16.
  */
+
+//this whole class is not really being used.
 public class MapCursor extends CursorAdapter {
 
 //    public static class ViewHolder {

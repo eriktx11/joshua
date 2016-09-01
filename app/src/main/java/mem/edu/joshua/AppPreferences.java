@@ -22,29 +22,35 @@ private Context context;
         this._prefsEditor = _sharedPrefs.edit();
     }
 
+
     public Double getCoordBody(String coord) {
         return Double.longBitsToDouble(_sharedPrefs.getLong(coord, 0));
     }
 
+    //not used in this app. Oops typo here
     public int getIntdBody() {
         return _sharedPrefs.getInt("selction", -1);
     }
 
+    //not used in this app. Oops typo here.
     public void saveIntVal(int val) {
         _prefsEditor.putInt("selction", val);
         _prefsEditor.apply();
     }
 
+    //here I get Lat and Lon
     public void saveCoordBody(String coord, Double val) {
         _prefsEditor.putLong(coord, Double.doubleToRawLongBits(val));
         _prefsEditor.apply();
     }
 
+    //not used in this app
     public void removePref(String coord) {
         _prefsEditor.remove(coord);
         _prefsEditor.apply();
     }
 
+    //not used in this app
     public Map<String, ?> getAll() {
         return _sharedPrefs.getAll();
     }

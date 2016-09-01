@@ -14,7 +14,7 @@ import net.simonvt.schematic.annotation.Table;
 public class QuoteDatabase {
   private QuoteDatabase(){}
 
-  public static final int VERSION = 2;
+  public static final int VERSION = 2;//if you change the table structure change the version to 3
 
   @Table(QuoteColumns.class) public static final String ID_BUSINESS_NAME = "biz";
 

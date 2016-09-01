@@ -3,7 +3,7 @@ package mem.edu.joshua;
 /**
  * Created by erikllerena on 8/14/16.
  */
-public class GetSet {
+public class GetSet {//getter and setters duh!
 
     private double latitude;
     private double longitude;

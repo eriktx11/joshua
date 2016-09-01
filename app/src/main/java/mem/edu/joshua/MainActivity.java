@@ -75,6 +75,8 @@ public class MainActivity extends AppCompatActivity implements ConnectionCallbac
     public static final String ACTION_FINISHED_SYNC = "mem.edu.joshua.ACTION_FINISHED_SYNC";
     private static IntentFilter syncIntentFilter = new IntentFilter(ACTION_FINISHED_SYNC);
 
+    //Very important piece of code. It adds the fragment ONLY if the Yelp responded with the string an SyncAdapter has finished
+    //inserting the data
     private BroadcastReceiver syncBroadcastReceiver = new BroadcastReceiver() {
         @Override public void onReceive(Context context, Intent intent) {
             setContentView(R.layout.yelp_google_map);
@@ -131,7 +133,7 @@ public class MainActivity extends AppCompatActivity implements ConnectionCallbac
         isConnected = activeNetwork != null &&
                 activeNetwork.isConnectedOrConnecting();
 
-        if(isConnected){
+        if(isConnected){//If not network don't run Google service
 
             sPref = new AppPreferences(getBaseContext());
 
@@ -169,7 +171,7 @@ public class MainActivity extends AppCompatActivity implements ConnectionCallbac
     public void onLocationChanged(Location location) {
         Log.i(LOG_TAG, location.toString());
 
-        if(permissionIsGranted){
+        if(permissionIsGranted){//for API >=23 we need permission otherwise app crashes
             coord.setLon(location.getLongitude());
             coord.setLat(location.getLatitude());
 
@@ -186,10 +188,10 @@ public class MainActivity extends AppCompatActivity implements ConnectionCallbac
         int interval = 1000*60*60*2;
         mLocationRequest = LocationRequest.create();
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        mLocationRequest.setInterval(interval);
+        mLocationRequest.setInterval(interval);//interval to request coordinates
 
         try {
-            requestLocationUpdates();
+            requestLocationUpdates();//request permission if API >=23
 
             if(permissionIsGranted) {
 
@@ -250,6 +252,8 @@ public class MainActivity extends AppCompatActivity implements ConnectionCallbac
                         if (mLocationRequest != null) {
                             Log.e(LOG_TAG, "google working");
 
+                            //this code runs the first time the permissions are granted. Other wise the app doesn't run the very
+                            //first time
                             LocationManager service = (LocationManager) getSystemService(LOCATION_SERVICE);
                             Criteria criteria = new Criteria();
                             String provider = service.getBestProvider(criteria, false);
