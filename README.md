@@ -1,3 +1,4 @@
+[![API](https://img.shields.io/badge/API-17%2B-green.svg?style=flat)](https://android-arsenal.com/api?level=17)
 # Joshua Android App
 
 ## Required
