@@ -17,3 +17,8 @@ Once you install the app, you can also add a widget in the home screen.
 - Listeners.
 - [Schematic Library](https://github.com/SimonVT/schematic).
 - Location Services.
+
+## License
+
+[Apache 2.0](https://svn.apache.org/viewvc/httpd/httpd/trunk/LICENSE?view=markup)  
+Also those added to the gradle configuration file.
