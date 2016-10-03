@@ -4,6 +4,11 @@
 ## Required
 Please add Yelp API credential in the gradle.properties, and Google Map API key in the google_map_api.xml to run this app
 
+<img src="http://www.dia40.com/oodles/josh/ss1.png" width="300">
+<img src="http://www.dia40.com/oodles/josh/ss2.png" width="300"><br>
+<img src="http://www.dia40.com/oodles/josh/ss3.png" width="300">
+
+
 ## Description
 
 This app retrives businesses from about 3 miles radius of the GPS location, which is obtained by the device.
